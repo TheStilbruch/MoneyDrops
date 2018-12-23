@@ -33,6 +33,11 @@ public class DropManager implements Listener {
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         EntityDropSettings dropSettings = plugin.moneyDropsConfig.getEntityDropSettings(event.getEntityType());
+        Random rand = new Random();
+        //Test to see if we actually want to drop the item
+        if (!(rand.nextDouble() < dropSettings.dropChance)) return;
+
+        //Drop the item
         Location deathLocation = event.getEntity().getLocation();
         Item droppedItem = deathLocation.getWorld().dropItem(deathLocation, new ItemStack(Material.GOLD_NUGGET)); //TODO: Load the item type from config
         
@@ -40,7 +45,6 @@ public class DropManager implements Listener {
         if (dropSettings.maxDropValue == dropSettings.minDropValue || dropSettings.minDropValue > dropSettings.maxDropValue) {
             dropWorth = dropSettings.minDropValue;
         } else {
-            Random rand = new Random();
             dropWorth = dropSettings.minDropValue + (rand.nextDouble() * (dropSettings.maxDropValue - dropSettings.minDropValue));
         }
         droppedItem.setMetadata("dropValue", new FixedMetadataValue(plugin, dropWorth));
