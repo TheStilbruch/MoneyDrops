@@ -1,5 +1,6 @@
 package com.stilbruch.moneydrops;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,7 +27,6 @@ public class DropManager implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         Location deathLocation = event.getEntity().getLocation();
         Item droppedItem = deathLocation.getWorld().dropItem(deathLocation, new ItemStack(Material.GOLD_NUGGET));
-        deathLocation.getWorld().playSound(deathLocation, Sound.ENTITY_SHEEP_SHEAR, 3.0f, 2.0f);
 
         droppedItem.setMetadata("dropValue", new FixedMetadataValue(plugin, 20)); //TODO: This will not be a hardcoded value
         droppedItem.setCustomName(ChatColor.GOLD + "Gold");
@@ -37,11 +37,16 @@ public class DropManager implements Listener {
     public void onItemPickup(EntityPickupItemEvent event) {
         if (event.getEntityType() == EntityType.PLAYER && event.getItem().hasMetadata("dropValue")) {
             Player player = (Player) event.getEntity();
-            int value = event.getItem().getMetadata("dropValue").get(0).asInt();
-            String message = String.format("You picked up %s$%s%s%s.", ChatColor.GOLD, ChatColor.YELLOW, value, ChatColor.GRAY);
+            int moneyValue = event.getItem().getMetadata("dropValue").get(0).asInt();
+            String message = plugin.messagesConfig.ITEM_PICKUP.replace("%money%", Integer.toString(moneyValue));
             
+            //I really hate the way this looks in game, but as for now I cannot
+            //figure out a way to have the player pick up an item and have it not add to
+            //the inventory.
             player.sendMessage(plugin.formatMessage(message));
-            event.setCancelled(true); //Cancel the event, we don't actually want the player picking up the item
+            event.setCancelled(true);
+            event.getItem().remove();
+            event.getItem().getLocation().getWorld().playSound(event.getItem().getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.5f, 1.0f);
         }
     }
 }
