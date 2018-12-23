@@ -1,6 +1,6 @@
 
 entity_settings:
     default:
-        drop_chance: 80
-        drop_value_max: 50
-        drop_value_min: 20
+        drop_chance: 0.5
+        max_drop_value: 50
+        min_drop_value: 20

@@ -1,5 +1,10 @@
 package com.stilbruch.moneydrops;
 
+import java.text.DecimalFormat;
+import java.util.Random;
+
+import com.stilbruch.moneydrops.config.EntityDropSettings;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,6 +22,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class DropManager implements Listener {
 
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
+
     private MoneyDropsPlugin plugin;
 
     public DropManager(MoneyDropsPlugin plugin) {
@@ -25,11 +32,19 @@ public class DropManager implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
+        EntityDropSettings dropSettings = plugin.moneyDropsConfig.getEntityDropSettings(event.getEntityType());
         Location deathLocation = event.getEntity().getLocation();
-        Item droppedItem = deathLocation.getWorld().dropItem(deathLocation, new ItemStack(Material.GOLD_NUGGET));
-
-        droppedItem.setMetadata("dropValue", new FixedMetadataValue(plugin, 20)); //TODO: This will not be a hardcoded value
-        droppedItem.setCustomName(ChatColor.GOLD + "Gold");
+        Item droppedItem = deathLocation.getWorld().dropItem(deathLocation, new ItemStack(Material.GOLD_NUGGET)); //TODO: Load the item type from config
+        
+        double dropWorth;
+        if (dropSettings.maxDropValue == dropSettings.minDropValue || dropSettings.minDropValue > dropSettings.maxDropValue) {
+            dropWorth = dropSettings.minDropValue;
+        } else {
+            Random rand = new Random();
+            dropWorth = dropSettings.minDropValue + (rand.nextDouble() * (dropSettings.maxDropValue - dropSettings.minDropValue));
+        }
+        droppedItem.setMetadata("dropValue", new FixedMetadataValue(plugin, dropWorth));
+        droppedItem.setCustomName(ChatColor.GOLD + "Gold"); //TODO: Have this loaded in from the config
         droppedItem.setCustomNameVisible(true);
     }
 
@@ -37,8 +52,8 @@ public class DropManager implements Listener {
     public void onItemPickup(EntityPickupItemEvent event) {
         if (event.getEntityType() == EntityType.PLAYER && event.getItem().hasMetadata("dropValue")) {
             Player player = (Player) event.getEntity();
-            int moneyValue = event.getItem().getMetadata("dropValue").get(0).asInt();
-            String message = plugin.messagesConfig.ITEM_PICKUP.replace("%money%", Integer.toString(moneyValue));
+            double moneyValue = event.getItem().getMetadata("dropValue").get(0).asDouble();
+            String message = plugin.messagesConfig.ITEM_PICKUP.replace("%money%", DECIMAL_FORMAT.format(moneyValue));
             
             //I really hate the way this looks in game, but as for now I cannot
             //figure out a way to have the player pick up an item and have it not add to
