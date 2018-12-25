@@ -37,7 +37,12 @@ public class MoneyDropsConfig {
         for (String key : entitySettingsSection.getKeys(false)) {
             if (key.equals("default")) continue; // We don't need to load in the default data again
             
-            //TODO: Load in other entity data
+            EntityType keyType = EntityType.valueOf(key);
+            if (keyType != null) {
+                dropSettingsMap.put(keyType, new EntityDropSettings(entitySettingsSection.getConfigurationSection(key)));
+            } else {
+                System.out.println(String.format("Invalid entity setting '%s' found!", key));
+            }
         }
     }
 
