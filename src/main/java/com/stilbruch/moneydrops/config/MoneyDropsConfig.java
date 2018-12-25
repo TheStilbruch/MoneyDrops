@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.stilbruch.moneydrops.MoneyDropsPlugin;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -12,6 +13,7 @@ import org.bukkit.entity.EntityType;
 public class MoneyDropsConfig {
 
     public final Boolean DROP_KILLS_ONLY;
+    public final Material MONEY_ITEM;
 
     private final EntityDropSettings defaultDropSettings;
     private final HashMap<EntityType, EntityDropSettings> dropSettingsMap;
@@ -22,6 +24,12 @@ public class MoneyDropsConfig {
 
         //Load in the basic config values
         DROP_KILLS_ONLY = config.getBoolean("settings.kills_only", true);
+        MONEY_ITEM = Material.getMaterial(config.getString("settings.money_item", "GOLD_NUGGET"));
+        
+        //Check the validity of some of the basic config values.
+        if (MONEY_ITEM == null) {
+            throw new MoneyDropsConfigException("Invalid material for settings.money_item!");
+        }
 
         //Load in the dynamic entity specific config values
         ConfigurationSection entitySettingsSection = config.getConfigurationSection("entity_settings");

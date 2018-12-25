@@ -5,6 +5,9 @@
 settings:
     # Whether money should be dropped only when the entity is killed by a player, or at any death
     kills_only: true 
+    # Material for the item that is dropped on the ground representing money.
+    # You must use values from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+    money_item: EMERALD
 
 entity_settings:
     default:

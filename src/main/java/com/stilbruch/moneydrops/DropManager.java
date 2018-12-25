@@ -42,7 +42,7 @@ public class DropManager implements Listener {
         
         //Drop the item
         Location deathLocation = event.getEntity().getLocation();
-        Item droppedItem = deathLocation.getWorld().dropItem(deathLocation, new ItemStack(Material.GOLD_NUGGET)); //TODO: Load the item type from config
+        Item droppedItem = deathLocation.getWorld().dropItem(deathLocation, new ItemStack(plugin.moneyDropsConfig.MONEY_ITEM));
         
         double dropWorth;
         if (dropSettings.maxDropValue == dropSettings.minDropValue || dropSettings.minDropValue > dropSettings.maxDropValue) {
