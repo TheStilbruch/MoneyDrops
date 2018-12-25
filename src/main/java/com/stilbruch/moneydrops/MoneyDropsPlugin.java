@@ -6,11 +6,14 @@ import com.stilbruch.moneydrops.config.MoneyDropsConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.milkbowl.vault.economy.Economy;
+
 public class MoneyDropsPlugin extends JavaPlugin {
 
     public MoneyDropsConfig moneyDropsConfig;
     public MessagesConfig messagesConfig;
     public DropManager dropManager;
+    public Economy economy;
 
     @Override
     public void onEnable() {
@@ -23,6 +26,7 @@ public class MoneyDropsPlugin extends JavaPlugin {
         }
         messagesConfig = new MessagesConfig(this);
         dropManager = new DropManager(this);
+        economy = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
 
         //Add listeners
         getServer().getPluginManager().registerEvents(dropManager, this);

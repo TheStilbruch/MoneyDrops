@@ -67,6 +67,7 @@ public class DropManager implements Listener {
             //figure out a way to have the player pick up an item and have it not add to
             //the inventory.
             player.sendMessage(plugin.formatMessage(message));
+            plugin.economy.depositPlayer(player, moneyValue);
             event.setCancelled(true);
             event.getItem().remove();
             event.getItem().getLocation().getWorld().playSound(event.getItem().getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.5f, 1.0f);

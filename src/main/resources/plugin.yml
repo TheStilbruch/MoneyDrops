@@ -2,6 +2,7 @@
  version: 0.0.1
  description: A simple plugin for adding money drops to entities and players
  author: CaptainInflamo
- website: 
+ website: https://github.com/TheStilbruch/MoneyDrops
+ depend: ["Vault"]
  
  main: com.stilbruch.moneydrops.MoneyDropsPlugin
