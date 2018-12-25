@@ -5,7 +5,6 @@ import java.util.Random;
 
 import com.stilbruch.moneydrops.config.EntityDropSettings;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,11 +31,11 @@ public class DropManager implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
-        EntityDropSettings dropSettings = plugin.moneyDropsConfig.getEntityDropSettings(event.getEntityType());
-        Random rand = new Random();
-
         //Test to see if the entity was killed by a player, if the config specifies to only drop money from entities killed by players
         if (plugin.moneyDropsConfig.DROP_KILLS_ONLY && event.getEntity().getKiller() == null) return;
+
+        EntityDropSettings dropSettings = plugin.moneyDropsConfig.getEntityDropSettings(event.getEntityType());
+        Random rand = new Random();
 
         //Test to see if we actually want to drop the item
         if (!(rand.nextDouble() < dropSettings.dropChance)) return;
