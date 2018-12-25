@@ -53,7 +53,7 @@ public class DropManager implements Listener {
         }
         droppedItem.setMetadata("dropValue", new FixedMetadataValue(plugin, dropWorth));
         droppedItem.setCustomName(ChatColor.GOLD + "Gold"); //TODO: Have this loaded in from the config
-        droppedItem.setCustomNameVisible(true);
+        droppedItem.setCustomNameVisible(true); //TODO: Keep gold items from stacking
     }
 
     @EventHandler
