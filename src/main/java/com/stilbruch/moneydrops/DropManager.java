@@ -34,9 +34,13 @@ public class DropManager implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         EntityDropSettings dropSettings = plugin.moneyDropsConfig.getEntityDropSettings(event.getEntityType());
         Random rand = new Random();
+
+        //Test to see if the entity was killed by a player, if the config specifies to only drop money from entities killed by players
+        if (plugin.moneyDropsConfig.DROP_KILLS_ONLY && event.getEntity().getKiller() == null) return;
+
         //Test to see if we actually want to drop the item
         if (!(rand.nextDouble() < dropSettings.dropChance)) return;
-
+        
         //Drop the item
         Location deathLocation = event.getEntity().getLocation();
         Item droppedItem = deathLocation.getWorld().dropItem(deathLocation, new ItemStack(Material.GOLD_NUGGET)); //TODO: Load the item type from config

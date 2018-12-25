@@ -11,14 +11,19 @@ import org.bukkit.entity.EntityType;
 
 public class MoneyDropsConfig {
 
+    public final Boolean DROP_KILLS_ONLY;
+
     private final EntityDropSettings defaultDropSettings;
     private final HashMap<EntityType, EntityDropSettings> dropSettingsMap;
 
     public MoneyDropsConfig(MoneyDropsPlugin plugin) throws MoneyDropsConfigException {
         dropSettingsMap = new HashMap<EntityType,EntityDropSettings>();
-
         YamlConfiguration config = YamlConfiguration.loadConfiguration(getMessagesFile(plugin));
 
+        //Load in the basic config values
+        DROP_KILLS_ONLY = config.getBoolean("settings.kills_only", true);
+
+        //Load in the dynamic entity specific config values
         ConfigurationSection entitySettingsSection = config.getConfigurationSection("entity_settings");
         if (entitySettingsSection == null) {
             throw new MoneyDropsConfigException("No 'entity_settings' entry was found in the config!");

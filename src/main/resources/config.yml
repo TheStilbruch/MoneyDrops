@@ -1,3 +1,10 @@
+##################################################
+### Money Drops Config                         ###
+### by stilbruch                               ###
+##################################################
+settings:
+    # Whether money should be dropped only when the entity is killed by a player, or at any death
+    kills_only: true 
 
 entity_settings:
     default:
